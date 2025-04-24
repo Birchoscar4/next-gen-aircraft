@@ -31,14 +31,14 @@ class OSFGeometryTestGroup(Group):
         iv.add_output("mdot_cold", val=np.ones(nn) * 0.3, units="kg/s") #default is 1.5 - 0.3 matches the fresh air value from Planes et al. (2023) and Ametek exchanger value.
         iv.add_output("rho_cold", val=np.ones(nn) * 0.5, units="kg/m**3")
 
-        iv.add_output("mdot_hot", val= 0.04 * np.ones(nn), units="kg/s") #default is 0.075 - 0.183 matches hot bleed air input from Ametek exchanger. 
+        iv.add_output("mdot_hot", val= 0.183 * np.ones(nn), units="kg/s") #default is 0.075 - 0.183 matches hot bleed air input from Ametek exchanger. 
         iv.add_output("rho_hot", val=np.ones(nn) * 1020.2, units="kg/m**3")
 
-        iv.add_output("T_in_cold", val=np.ones(nn) * 200, units="degC") #default is 45 - last good run 240 - 302 matches ametek value
-        iv.add_output("T_in_hot", val=np.ones(nn) * 660, units="degC") #default is 90 - last good run 670 - 541 matches ametek value
-        iv.add_output("ac|propulsion|thermal|hx|n_long_cold", val= 50) #default is 3 - last good run 100
-        iv.add_output("ac|propulsion|thermal|hx|n_wide_cold", val= 375) #default is 430 - last good run 330
-        iv.add_output("ac|propulsion|thermal|hx|n_tall", val= 25) #default is 19 - last good run 20
+        iv.add_output("T_in_cold", val=np.ones(nn) * 200, units="degC") #default is 45 
+        iv.add_output("T_in_hot", val=np.ones(nn) * 660, units="degC") #default is 90 
+        iv.add_output("ac|propulsion|thermal|hx|n_long_cold", val= 50) #default is 3 - this was altered to change the size of the heat exchanger
+        iv.add_output("ac|propulsion|thermal|hx|n_wide_cold", val= 375) #default is 430 - this was altered to change the size of the heat exchanger
+        iv.add_output("ac|propulsion|thermal|hx|n_tall", val= 25) #default is 19 - this was altered to change the size of the heat exchanger
 
         iv.add_output("channel_height_cold", val=14, units="mm")
         iv.add_output("channel_width_cold", val=1.35, units="mm")

@@ -19,7 +19,7 @@ import pandas as pd #this is required to export the thrust and mach number data 
 # ==============================================================================
 # Extension modules
 # ==============================================================================
-from openconcept.examples.aircraft_data.specific_BWB_sizing import data as acdata # this uses the specific updated values from the aero team.
+from openconcept.examples.aircraft_data.BWB_sizing_values import data as acdata # this uses the specific updated values from the aero team.
 from openconcept.aerodynamics import PolarDrag, ParasiteDragCoefficient_JetTransport, CleanCLmax, FlapCLmax
 from openconcept.propulsion import RubberizedTurbofan
 from openconcept.geometry import CylinderSurfaceArea, WingMACTrapezoidal
