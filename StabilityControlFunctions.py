@@ -28,14 +28,14 @@ def WeightBalance():
 
     #Weight and Balance Array
     wb_data = {
-        'Component': ['Fuselage', 'Aft Fuselage', 'Wings', 'Vertical Tails', 'LH2 Tanks', 'Engines', 'Passengers and Crew', 'LV3 Containers', 'MLG', 'NLG'],
-        'Weight (kg)': [ float(masses_df.loc['Fuselage', 'mass']), float(masses_df.loc['Aft Body', 'mass']), 2*float(masses_df.loc['Wing', 'mass']), 2*float(masses_df.loc['Tail', 'mass']), 7709, 3902, 12580, 6350, 2*float(masses_df.loc['Main Landing Gear', 'mass']), float(masses_df.loc['Nose Landing Gear', 'mass'])],
-        'Xi (m)': [float(masses_df.loc['Fuselage', 'x_cg']), float(masses_df.loc['Aft Body', 'x_cg']), float(masses_df.loc['Wing', 'x_cg']), float(masses_df.loc['Wing', 'x_cg']), 10.995, 15, 8.37, 12.305, float(masses_df.loc['Main Landing Gear', 'x_cg']), float(masses_df.loc['Nose Landing Gear', 'x_cg'])], #x distance from RP
-        'Yi (m)': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], #z distance from RP
-        'Zi (m)': [float(masses_df.loc['Fuselage', 'z_cg']), float(masses_df.loc['Aft Body', 'z_cg']), float(masses_df.loc['Wing', 'z_cg']), float(masses_df.loc['Wing', 'y_cg']), -1.118, 2, 0.4, -0.955, float(masses_df.loc['Main Landing Gear', 'z_cg']), float(masses_df.loc['Nose Landing Gear', 'z_cg'])], #y distance from RP
-        'Ixx Personal': [float(masses_df.loc['Fuselage', 'Ixx']), float(masses_df.loc['Aft Body', 'Ixx']), 2*float(masses_df.loc['Wing', 'Ixx']), 2*float(masses_df.loc['Wing', 'Ixx']), 6151, 36072, 0, 0, 2*float(masses_df.loc['Main Landing Gear', 'Ixx']), float(masses_df.loc['Nose Landing Gear', 'Ixx']),],
-        'Iyy Personal': [float(masses_df.loc['Fuselage', 'Iyy']), float(masses_df.loc['Aft Body', 'Iyy']), 2*float(masses_df.loc['Wing', 'Iyy']), 2*float(masses_df.loc['Wing', 'Iyy']), 14458, 19735, 0, 3377, 2*float(masses_df.loc['Main Landing Gear', 'Iyy']), float(masses_df.loc['Nose Landing Gear', 'Iyy']),], 
-        'Izz Personal': [float(masses_df.loc['Fuselage', 'Izz']), float(masses_df.loc['Aft Body', 'Izz']), 2*float(masses_df.loc['Wing', 'Izz']), 2*float(masses_df.loc['Wing', 'Izz']), 14458, 19735, 0, 2490, 2*float(masses_df.loc['Main Landing Gear', 'Izz']), float(masses_df.loc['Nose Landing Gear', 'Izz']), ]    
+        'Component': ['Fuselage', 'Aft Fuselage', 'Wings', 'Vertical Tails', 'LH2 Tanks', 'Engines', 'Passengers and Crew', 'LD3 Containers', 'Electrical Systems & Actuators', 'MLG', 'NLG'],
+        'Weight (kg)': [ float(masses_df.loc['Fuselage', 'mass']), float(masses_df.loc['Aft Body', 'mass']), 2*float(masses_df.loc['Wing', 'mass']), 2*float(masses_df.loc['vstab', 'mass']), 7346, 3902, 12580, 6352, 5836, 2*float(masses_df.loc['Main Landing Gear', 'mass']), float(masses_df.loc['Nose Landing Gear', 'mass'])],
+        'Xi (m)': [float(masses_df.loc['Fuselage', 'x_cg']), float(masses_df.loc['Aft Body', 'x_cg']), float(masses_df.loc['Wing', 'x_cg']), float(masses_df.loc['vstab', 'x_cg']), 6.2295, 15.775, 8.43, 4.2265, 8.23, float(masses_df.loc['Main Landing Gear', 'x_cg']), float(masses_df.loc['Nose Landing Gear', 'x_cg'])], #x distance from RP
+        'Yi (m)': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], #z distance from RP
+        'Zi (m)': [float(masses_df.loc['Fuselage', 'z_cg']), float(masses_df.loc['Aft Body', 'z_cg']), float(masses_df.loc['Wing', 'z_cg']), float(masses_df.loc['vstab', 'z_cg']), -1.118, 2, 0.4, -0.955, -1, float(masses_df.loc['Main Landing Gear', 'z_cg']), float(masses_df.loc['Nose Landing Gear', 'z_cg'])], #y distance from RP
+        'Ixx Personal': [float(masses_df.loc['Fuselage', 'Ixx']), float(masses_df.loc['Aft Body', 'Ixx']), 2*float(masses_df.loc['Wing', 'Ixx']), 2*float(masses_df.loc['vstab', 'Ixx']), 6151, 36072, 0, 0, 0, 2*float(masses_df.loc['Main Landing Gear', 'Ixx']), float(masses_df.loc['Nose Landing Gear', 'Ixx']),],
+        'Iyy Personal': [float(masses_df.loc['Fuselage', 'Iyy']), float(masses_df.loc['Aft Body', 'Iyy']), 2*float(masses_df.loc['Wing', 'Iyy']), 2*float(masses_df.loc['vstab', 'Iyy']), 14458, 19735, 0, 3377, 0, 2*float(masses_df.loc['Main Landing Gear', 'Iyy']), float(masses_df.loc['Nose Landing Gear', 'Iyy']),], 
+        'Izz Personal': [float(masses_df.loc['Fuselage', 'Izz']), float(masses_df.loc['Aft Body', 'Izz']), 2*float(masses_df.loc['Wing', 'Izz']), 2*float(masses_df.loc['vstab', 'Iyy']), 14458, 19735, 0, 2490, 0, 2*float(masses_df.loc['Main Landing Gear', 'Izz']), float(masses_df.loc['Nose Landing Gear', 'Izz']), ]    
     }
     print(wb_data)
     df = pd.DataFrame(wb_data)
@@ -82,18 +82,18 @@ def WeightBalance():
     print ('Iyy total: ', (Iyy_total))
     print ('Izz total: ', (Izz_total))
 
-    return masses_df
+    return masses_df, total_weight, Ixx_total, Iyy_total, Izz_total, Izx_total
 
 #############################################################
 #                                                           #
 #               STATIC STABILITY ANALYSIS                   #
 #                                                           #
 #############################################################
-def StaticStability(stab_file):
+def StaticStability():
 
  
     # Path to your .stab file
-    stab_file_path = 'Poster_Showcase_Model_2_DegenGeom.stab' #Set name of Stability file here
+    stab_file_path = 'T_area_12_angle_60.stab'
 
     # Empty dictionary to store the values
     flight_data = {}
@@ -122,7 +122,7 @@ def StaticStability(stab_file):
     velocity = flight_data_df.loc['Vinf_', 'Value'];  
     rho = flight_data_df.loc['Rho_', 'Value']; 
     q_dash0 = 0.5*rho*(velocity**2); 
-    cd_0 = 0.00828; 
+    cd_0 = 0.021; 
     wing_area = flight_data_df.loc['Sref_', 'Value']; 
     thrust_mach_number = -12590; 
     mac = flight_data_df.loc['Cref_', 'Value']; 
@@ -213,12 +213,12 @@ def StaticStability(stab_file):
         return None  # if not found
 
     #Load .qstab file
-    qstab_file = 'Poster_Showcase_Model 1_DegenGeom_Q.qstab'  # Replace with actual file path
+    qstab_file = 'Poster_Showcase_Model 1_DegenGeom_Q.qstab'  # Replace with your actual file path
     cm_q_plus_alpha_dot = extract_cm_q_alpha_dot(qstab_file)
 
     # Load .stab file
-    stab_data, extra_data = read_stab_file(stab_filename)
-    extra_data = extract_sm_xnp(stab_filename)
+    stab_data, extra_data = read_stab_file(stab_file_path)
+    extra_data = extract_sm_xnp(stab_file_path)
 
     # Display DataFrames
     print("🔹 Stability Derivative Data:")
@@ -237,6 +237,8 @@ def StaticStability(stab_file):
     else: 
         print ("Aircraft Derivative is not Stable, optimise configuration")
 
+    print("")
+
     #Side Speed Disturbance Calculations
     cy_beta = stab_data.loc[stab_data['Coef'] == 'CFy', 'Beta'].values[0]; 
     print("Side Speed Disturbance Coefficient:")
@@ -245,6 +247,8 @@ def StaticStability(stab_file):
         print ("Aircraft Derivative is Stable")
     else: 
         print ("Aircraft Derivative is not Stable, optimise configuration")
+
+    print("")
 
     #Vertical Speed Disturbance Calculations 
     cl_alpha = stab_data.loc[stab_data['Coef'] == 'CL', 'Alpha'].values[0]; 
@@ -255,6 +259,8 @@ def StaticStability(stab_file):
     else: 
         print ("Aircraft Derivative is not Stable, optimise configuration")
 
+    print("")
+
     #Dihedral Effect Disturbance Calculations
     c_i_beta = stab_data.loc[stab_data['Coef'] == 'CMl', 'Beta'].values[0]; 
     print("Dihedral Effect Disturbance Coefficient:")
@@ -263,6 +269,8 @@ def StaticStability(stab_file):
         print ("Aircraft Derivative is Stable")
     else: 
         print ("Aircraft Derivative is not Stable, optimise configuration")
+
+    print("")
 
     #Roll Rate Disturbance Calculations 
     c_i_p = stab_data.loc[stab_data['Coef'] == 'CMl', 'p'].values[0]; 
@@ -273,6 +281,8 @@ def StaticStability(stab_file):
     else: 
         print ("Aircraft Derivative is not Stable, optimise configuration")
 
+    print("")
+
     #Static Longitudinal Stability Calculations 
     cm_alpha = stab_data.loc[stab_data['Coef'] == 'CMm', 'Alpha'].values[0]; 
     print("Static Longitudinal Stability Coefficient:")
@@ -281,6 +291,8 @@ def StaticStability(stab_file):
         print ("Aircraft Derivative is Stable")
     else: 
         print ("Aircraft Derivative is not Stable, optimise configuration")
+
+    print("")
 
     #Pitch Rate Disturbance Calculations
     cm_q = stab_data.loc[stab_data['Coef'] == 'CMm', 'q'].values[0]; 
@@ -291,6 +303,8 @@ def StaticStability(stab_file):
     else: 
         print ("Aircraft Derivative is not Stable, optimise configuration")
 
+    print("")
+
     #Static Directional Stability Calculations 
     cn_beta = stab_data.loc[stab_data['Coef'] == 'CMn', 'Beta'].values[0]; 
     print("Static Directional Stability Coefficient:")
@@ -299,6 +313,8 @@ def StaticStability(stab_file):
         print ("Aircraft Derivative is Stable ")
     else: 
         print ("Aircraft Derivative is not Stable, optimise configuration")
+
+    print("")
 
     #Yaw Rate Disturbance Calculations 
     cn_r = stab_data.loc[stab_data['Coef'] == 'CMn', 'r'].values[0]; 
@@ -309,6 +325,8 @@ def StaticStability(stab_file):
     else: 
         print ("Aircraft Derivative is not Stable, optimise configuration")
 
+    print("")
+
     #Static Margin 
     static_margin = extra_data.loc[extra_data['Coef'] == 'SM', 'Value'].values[0]; 
     print("Static Margin:")
@@ -317,6 +335,10 @@ def StaticStability(stab_file):
         print ("Aircraft Derivative is Stable")
     else: 
         print ("Aircraft Derivative is not Stable, optimise configuration")
+
+    print("")
+
+    return velocity, gravity, q_dash0, wing_area, wingspan, mac, rho, stab_data, cd_0, cn_beta, c_i_beta, cn_r, c_i_p, cm_q_plus_alpha_dot, cy_beta, Ct_xu, cm_q, cl_alpha, cm_alpha
  
 #############################################################
 #                                                           #
@@ -324,35 +346,14 @@ def StaticStability(stab_file):
 #                                                           #
 #############################################################
 def DynamicStabilityControl():
-    ####Defining from previous functions
-    #WeightBalance
-    total_weight = WeightBalance(total_weight); 
-    Ixx_total = WeightBalance(Ixx_total); 
-    Iyy_total = WeightBalance(Iyy_total); 
-    Izz_total = WeightBalance(Ixx_total); 
-    Izx_total = WeightBalance(Izx_total); 
 
-    #Static Stability
-    velocity = StaticStability(velocity); 
-    gravity = StaticStability(gravity); 
-    q_dash0 = StaticStability(q_dash0); 
-    wing_area = StaticStability(wing_area); 
-    mac = StaticStability(mac); 
-    wingspan = StaticStability(wingspan); 
-    rho = StaticStability(rho)
-
-    stab_data = StaticStability(stab_data); 
-    cd_0 = StaticStability(cd_0); 
-    cn_beta = StaticStability(cn_beta); 
-    c_i_beta = StaticStability(c_i_beta); 
-    cn_r = StaticStability(cn_r); 
-    c_i_p = StaticStability(c_i_p); 
-    cm_q_plus_alpha_dot = StaticStability(cm_q_plus_alpha_dot); 
-    cy_beta = StaticStability(cy_beta); 
-    Ct_xu = StaticStability(Ct_xu); 
-    cm_q = StaticStability(cm_q); 
-    cl_alpha = StaticStability(cl_alpha); 
-    cm_alpha = StaticStability(cm_alpha); 
+    # Obtaining values from Weight & Balance Function
+    masses_df, total_weight, Ixx_total, Iyy_total, Izz_total, Izx_total = WeightBalance()
+    
+    # Obtaining Values from Static Stability function
+    (velocity, gravity, q_dash0, wing_area, wingspan, mac, rho, 
+     stab_data, cd_0, cn_beta, c_i_beta, cn_r, c_i_p, 
+     cm_q_plus_alpha_dot, cy_beta, Ct_xu, cm_q, cl_alpha, cm_alpha) = StaticStability()
 
     ########## Required Stability Derivatives##############
 
@@ -397,7 +398,6 @@ def DynamicStabilityControl():
         print("Aircraft is unacceptable for Rolling Mode, optimise configuration")
 
     print("")
-    
     ######Roll Mode Plotting########
 
     # Numerator and denominator coefficients of the transfer function
@@ -632,4 +632,4 @@ def DynamicStabilityControl():
 
     exit_code = input("Press Enter to Exit")
 
-    return
+
