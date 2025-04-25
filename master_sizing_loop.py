@@ -23,8 +23,8 @@ build_initial_geometry()
 
 ##########################AERODYNAMICS CODE #############################
 #this is integrated into the fsi, it doesnt act as its own standalone chunk of code
-
-
+from vlm_fsi_pos import vlm_fsi_pos
+from vlm_fsi_neg import vlm_fsi_neg
 
 
 
