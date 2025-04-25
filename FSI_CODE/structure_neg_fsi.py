@@ -6,7 +6,7 @@ vsp.ReadVSPFile("Prelim_2.vsp3")  # Replace with your OpenVSP model file
 
 # Get the Wing Geom ID (assuming it's a wing)
 wing_id = vsp.FindGeomsWithName("WING")  # Replace "WING" with your actual component name
-def structures_neg_fsi(wing_id, start_index = 2, end_index = 10):
+def update_geom_neg(wing_id, start_index = 2, end_index = 10):
     wing_id = wing_id[0]
 
     num_xsec_surfs = vsp.GetNumXSecSurfs(wing_id)
@@ -80,7 +80,7 @@ def structures_neg_fsi(wing_id, start_index = 2, end_index = 10):
 
     return delta_y_values
 
-structures_neg_fsi(wing_id)
-vsp.WriteVSPFile("structures_neg_fsi.vsp3")
+update_geom_neg(wing_id)
+vsp.WriteVSPFile("update_geom_neg.vsp3")
 print("Twist and DeltaY updated successfully.")
 print("Model saved correctly as structures_neg_fsi.vsp3")
