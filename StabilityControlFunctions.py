@@ -34,8 +34,8 @@ def WeightBalance():
         'Yi (m)': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], #z distance from RP
         'Zi (m)': [float(masses_df.loc['Fuselage', 'z_cg']), float(masses_df.loc['Aft Body', 'z_cg']), float(masses_df.loc['Wing', 'z_cg']), float(masses_df.loc['Wing', 'y_cg']), -1.118, 2, 0.4, -0.955, float(masses_df.loc['Main Landing Gear', 'z_cg']), float(masses_df.loc['Nose Landing Gear', 'z_cg'])], #y distance from RP
         'Ixx Personal': [float(masses_df.loc['Fuselage', 'Ixx']), float(masses_df.loc['Aft Body', 'Ixx']), 2*float(masses_df.loc['Wing', 'Ixx']), 2*float(masses_df.loc['Wing', 'Ixx']), 6151, 36072, 0, 0, 2*float(masses_df.loc['Main Landing Gear', 'Ixx']), float(masses_df.loc['Nose Landing Gear', 'Ixx']),],
-        'Iyy Personal': [float(masses_df.loc['Fuselage', 'Iyy']), float(masses_df.loc['Aft Body', 'Iyy']), 2*float(masses_df.loc['Wing', 'Iyy']), 0, 14458, 19735, 0, 3377, 2*float(masses_df.loc['Main Landing Gear', 'Iyy']), float(masses_df.loc['Nose Landing Gear', 'Iyy']),], 
-        'Izz Personal': [float(masses_df.loc['Fuselage', 'Izz']), float(masses_df.loc['Aft Body', 'Izz']), 2*float(masses_df.loc['Wing', 'Izz']), 0, 14458, 19735, 0, 2490, 2*float(masses_df.loc['Main Landing Gear', 'Izz']), float(masses_df.loc['Nose Landing Gear', 'Izz']), ]    
+        'Iyy Personal': [float(masses_df.loc['Fuselage', 'Iyy']), float(masses_df.loc['Aft Body', 'Iyy']), 2*float(masses_df.loc['Wing', 'Iyy']), 2*float(masses_df.loc['Wing', 'Iyy']), 14458, 19735, 0, 3377, 2*float(masses_df.loc['Main Landing Gear', 'Iyy']), float(masses_df.loc['Nose Landing Gear', 'Iyy']),], 
+        'Izz Personal': [float(masses_df.loc['Fuselage', 'Izz']), float(masses_df.loc['Aft Body', 'Izz']), 2*float(masses_df.loc['Wing', 'Izz']), 2*float(masses_df.loc['Wing', 'Izz']), 14458, 19735, 0, 2490, 2*float(masses_df.loc['Main Landing Gear', 'Izz']), float(masses_df.loc['Nose Landing Gear', 'Izz']), ]    
     }
     print(wb_data)
     df = pd.DataFrame(wb_data)
@@ -93,7 +93,7 @@ def StaticStability(stab_file):
 
  
     # Path to your .stab file
-    stab_file_path = 'Poster_Showcase_Model_2_DegenGeom.stab'
+    stab_file_path = 'Poster_Showcase_Model_2_DegenGeom.stab' #Set name of Stability file here
 
     # Empty dictionary to store the values
     flight_data = {}
@@ -125,7 +125,6 @@ def StaticStability(stab_file):
     cd_0 = 0.00828; 
     wing_area = flight_data_df.loc['Sref_', 'Value']; 
     thrust_mach_number = -12590; 
-    thrust_moment_arm = 1.99; 
     mac = flight_data_df.loc['Cref_', 'Value']; 
     wingspan = flight_data_df.loc['Bref_', 'Value']; 
     gravity = 9.81
@@ -214,11 +213,10 @@ def StaticStability(stab_file):
         return None  # if not found
 
     #Load .qstab file
-    qstab_file = 'Poster_Showcase_Model 1_DegenGeom_Q.qstab'  # Replace with your actual file path
+    qstab_file = 'Poster_Showcase_Model 1_DegenGeom_Q.qstab'  # Replace with actual file path
     cm_q_plus_alpha_dot = extract_cm_q_alpha_dot(qstab_file)
 
     # Load .stab file
-    stab_filename = "Poster_Showcase_Model_2_DegenGeom.stab"  # Replace with actual file
     stab_data, extra_data = read_stab_file(stab_filename)
     extra_data = extract_sm_xnp(stab_filename)
 
@@ -271,16 +269,6 @@ def StaticStability(stab_file):
     print("Roll Rate Disturbance Coefficient:")
     print (c_i_p) 
     if c_i_p < 0: 
-        print ("Aircraft Derivative is Stable")
-    else: 
-        print ("Aircraft Derivative is not Stable, optimise configuration")
-
-    #Pitching Moment Due to Forward Speed Requirements
-    print("Pitching Moment Due to Forward Speed Coefficient:")
-    cm_u = stab_data.loc[stab_data['Coef'] == 'CMm', 'U'].values[0]; 
-    cm_t_u = -Ct_xu * (thrust_moment_arm / mac); 
-    print (cm_u + cm_t_u) 
-    if cm_u + cm_t_u > 0: 
         print ("Aircraft Derivative is Stable")
     else: 
         print ("Aircraft Derivative is not Stable, optimise configuration")
@@ -409,6 +397,7 @@ def DynamicStabilityControl():
         print("Aircraft is unacceptable for Rolling Mode, optimise configuration")
 
     print("")
+    
     ######Roll Mode Plotting########
 
     # Numerator and denominator coefficients of the transfer function
