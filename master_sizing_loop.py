@@ -124,20 +124,29 @@ counter = 0
 tip_deflection_error = 1
 while tip_deflection_error > 0.05:
     # Call wing deflection function to produce deflection and twist distribution
+    tip_deflection = compute_wing_mass(spar_cap_radius=wing_sparcap_radius, num_stringers=wing_num_stringers, skin_thickness=wing_skin_thickness, spar_thickness=wing_spar_thickness,max_q_velocity=max_q_velocity, max_q_density=max_q_density,load_factors=load_factor, LE_spar=LE_spar_wing, TE_spar=TE_spar_wing, file_path = "wing_pressure.slc")[8]
+    tip_def_array[counter] = tip_deflection
+    tip_deflection_error = (tip_def_array[counter] - tip_def_array[counter-1])/tip_def_array[counter]
+    # Call update geometry function
+    update_geom_pos()
+    # Call VLM Function     # Creates pressure distribution file for the wing
+    
+    counter += 1
+
+tip_def_array = []
+counter = 0
+
+tip_deflection_error = 1
+while tip_deflection_error > 0.05:
+    # Call wing deflection function to produce deflection and twist distribution
     tip_deflection = compute_wing_mass(spar_cap_radius=wing_sparcap_radius, num_stringers=wing_num_stringers, skin_thickness=wing_skin_thickness, spar_thickness=wing_spar_thickness,max_q_velocity=max_q_velocity, max_q_density=max_q_density,load_factors=load_factor, LE_spar=LE_spar_wing, TE_spar=TE_spar_wing, file_path = "wing_pressure.slc")[9]
-    # tip_def_array[counter] = tip_deflection
+    tip_def_array[counter] = tip_deflection
     tip_deflection_error = (tip_def_array[counter] - tip_def_array[counter-1])/tip_def_array[counter]
     # Call update geometry function
     update_geom_neg()
     # Call VLM Function     # Creates pressure distribution file for the wing
     
     counter += 1
-    
-
-
-wing_mass_array = compute_wing_mass(spar_cap_radius=wing_sparcap_radius, num_stringers=wing_num_stringers, skin_thickness=wing_skin_thickness, spar_thickness=wing_spar_thickness,max_q_velocity=max_q_velocity, max_q_density=max_q_density,load_factors=load_factor, LE_spar=LE_spar_wing, TE_spar=TE_spar_wing)
-
-update_geom_pos() 
 
 # Landing gear sizing – uses MTOW estimate for initial sizing 
 landing_gear_mass_array = landing_gear_sizing(ground_clearance, MTOW, nlg_distance_from_cg, mlg_distance_from_cg, sink_speed, z_cg)
