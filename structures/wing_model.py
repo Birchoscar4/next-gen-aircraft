@@ -667,11 +667,15 @@ def compute_wing_mass(spar_cap_radius, num_stringers, skin_thickness, spar_thick
         if load_case == 0:
             with open("def_twist_pos.csv", "w", newline="") as f:
                 writer = csv.writer(f)
+                writer.writerow(["Deflection", "Twist"])
                 writer.writerows(zip(Ve, alpha_e))
+
         if load_case == 1:
             with open("def_twist_neg.csv", "w", newline="") as f:
                 writer = csv.writer(f)
+                writer.writerow(["Deflection", "Twist"])
                 writer.writerows(zip(Ve, alpha_e))
+
 
 
         print("Wing Mass:", mass,"kg")
