@@ -125,13 +125,12 @@ while tip_deflection_error > 0.05:
     # Call wing deflection function to produce deflection and twist distribution
     tip_deflection = compute_wing_mass(spar_cap_radius=wing_sparcap_radius, num_stringers=wing_num_stringers, skin_thickness=wing_skin_thickness, spar_thickness=wing_spar_thickness,max_q_velocity=max_q_velocity, max_q_density=max_q_density,load_factors=load_factor, LE_spar=LE_spar_wing, TE_spar=TE_spar_wing)[9]
     # tip_def_array[counter] = tip_deflection
-    tip_deflection_error = (tip_def_array[counter] - tip_def_array[counter-1])-tip_def_array[counter]
+    tip_deflection_error = (tip_def_array[counter] - tip_def_array[counter-1])/tip_def_array[counter]
     # Call update geometry function
     update_geom_neg()
     # Call VLM Function     # Creates pressure distribution file for the wing
     
     counter += 1
-    wing_mass_array = 
     
 
 
