@@ -16,9 +16,17 @@ plt.ion()
 
 # Load the component masses CSV from structures output
 def WeightBalance():
+
+    W_LH2, W_tank, r, L = LH2_tank_sizing_code()
+    tank_location_x = input("Input X coordinate of LH2 tank location")
+    tank_location_y
+    tank_location_z
+    
+    ld3_location = input("Input X coordinate of LD3 containers location")
+
     
     masses_df = pd.read_csv('aircraft_masses.csv')
-
+    
 
     # Check columns for spaces
     masses_df.columns = [col.strip() for col in masses_df.columns]
@@ -29,13 +37,13 @@ def WeightBalance():
     #Weight and Balance Array
     wb_data = {
         'Component': ['Fuselage', 'Aft Fuselage', 'Wings', 'Vertical Tails', 'LH2 Tanks', 'Engines', 'Passengers and Crew', 'LD3 Containers', 'Electrical Systems & Actuators', 'MLG', 'NLG'],
-        'Weight (kg)': [ float(masses_df.loc['Fuselage', 'mass']), float(masses_df.loc['Aft Body', 'mass']), 2*float(masses_df.loc['Wing', 'mass']), 2*float(masses_df.loc['vstab', 'mass']), 7346, 3902, 12580, 6352, 5836, 2*float(masses_df.loc['Main Landing Gear', 'mass']), float(masses_df.loc['Nose Landing Gear', 'mass'])],
+        'Weight (kg)': [ float(masses_df.loc['Fuselage', 'mass']), float(masses_df.loc['Aft Body', 'mass']), 2*float(masses_df.loc['Wing', 'mass']), 2*float(masses_df.loc['vstab', 'mass']), (W_LH2 + W_Tank), 3902, 12580, 6352, 5836, 2*float(masses_df.loc['Main Landing Gear', 'mass']), float(masses_df.loc['Nose Landing Gear', 'mass'])],
         'Xi (m)': [float(masses_df.loc['Fuselage', 'x_cg']), float(masses_df.loc['Aft Body', 'x_cg']), float(masses_df.loc['Wing', 'x_cg']), float(masses_df.loc['vstab', 'x_cg']), 6.2295, 15.775, 8.43, 4.2265, 8.23, float(masses_df.loc['Main Landing Gear', 'x_cg']), float(masses_df.loc['Nose Landing Gear', 'x_cg'])], #x distance from RP
         'Yi (m)': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], #z distance from RP
         'Zi (m)': [float(masses_df.loc['Fuselage', 'z_cg']), float(masses_df.loc['Aft Body', 'z_cg']), float(masses_df.loc['Wing', 'z_cg']), float(masses_df.loc['vstab', 'z_cg']), -1.118, 2, 0.4, -0.955, -1, float(masses_df.loc['Main Landing Gear', 'z_cg']), float(masses_df.loc['Nose Landing Gear', 'z_cg'])], #y distance from RP
-        'Ixx Personal': [float(masses_df.loc['Fuselage', 'Ixx']), float(masses_df.loc['Aft Body', 'Ixx']), 2*float(masses_df.loc['Wing', 'Ixx']), 2*float(masses_df.loc['vstab', 'Ixx']), 6151, 36072, 0, 0, 0, 2*float(masses_df.loc['Main Landing Gear', 'Ixx']), float(masses_df.loc['Nose Landing Gear', 'Ixx']),],
-        'Iyy Personal': [float(masses_df.loc['Fuselage', 'Iyy']), float(masses_df.loc['Aft Body', 'Iyy']), 2*float(masses_df.loc['Wing', 'Iyy']), 2*float(masses_df.loc['vstab', 'Iyy']), 14458, 19735, 0, 3377, 0, 2*float(masses_df.loc['Main Landing Gear', 'Iyy']), float(masses_df.loc['Nose Landing Gear', 'Iyy']),], 
-        'Izz Personal': [float(masses_df.loc['Fuselage', 'Izz']), float(masses_df.loc['Aft Body', 'Izz']), 2*float(masses_df.loc['Wing', 'Izz']), 2*float(masses_df.loc['vstab', 'Iyy']), 14458, 19735, 0, 2490, 0, 2*float(masses_df.loc['Main Landing Gear', 'Izz']), float(masses_df.loc['Nose Landing Gear', 'Izz']), ]    
+        'Ixx Personal': [float(masses_df.loc['Fuselage', 'Ixx']), float(masses_df.loc['Aft Body', 'Ixx']), 2*float(masses_df.loc['Wing', 'Ixx']), 2*float(masses_df.loc['vstab', 'Ixx']), 2*(0.5*((W_LH2+W_Tank)/2)*(r**2)), 36072, 0, 0, 0, 2*float(masses_df.loc['Main Landing Gear', 'Ixx']), float(masses_df.loc['Nose Landing Gear', 'Ixx']),],
+        'Iyy Personal': [float(masses_df.loc['Fuselage', 'Iyy']), float(masses_df.loc['Aft Body', 'Iyy']), 2*float(masses_df.loc['Wing', 'Iyy']), 2*float(masses_df.loc['vstab', 'Iyy']), 2*((1/12)*((W_LH2+W_Tank/2)*((3*(r**2)+(l**2)))), 19735, 0, 3377, 0, 2*float(masses_df.loc['Main Landing Gear', 'Iyy']), float(masses_df.loc['Nose Landing Gear', 'Iyy']),], 
+        'Izz Personal': [float(masses_df.loc['Fuselage', 'Izz']), float(masses_df.loc['Aft Body', 'Izz']), 2*float(masses_df.loc['Wing', 'Izz']), 2*float(masses_df.loc['vstab', 'Iyy']), 2*((1/12)*((W_LH2+W_Tank/2)*((3*(r**2)+(l**2)))), 19735, 0, 2490, 0, 2*float(masses_df.loc['Main Landing Gear', 'Izz']), float(masses_df.loc['Nose Landing Gear', 'Izz']), ]    
     }
     print(wb_data)
     df = pd.DataFrame(wb_data)
