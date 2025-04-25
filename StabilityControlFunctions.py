@@ -1,10 +1,11 @@
 #Weight & Balance Analysis Function 
-#Jude Doherty 07/04/2025
+#Jude Doherty 25/04/2025
 import pandas as pd
 import math
-from scipy.signal import TransferFunction, step, lsim
+import sympy as sp
 import numpy as np
 import matplotlib.pyplot as plt
+pi = float(math.pi)
 plt.ion()
 
 #############################################################
@@ -14,9 +15,9 @@ plt.ion()
 #############################################################
 
 # Load the component masses CSV from structures output
-def WeightBalance(masses_file):
+def WeightBalance():
     
-    masses_df = pd.read_csv(masses_file)
+    masses_df = pd.read_csv('aircraft_masses.csv')
 
 
     # Check columns for spaces
@@ -28,14 +29,15 @@ def WeightBalance(masses_file):
     #Weight and Balance Array
     wb_data = {
         'Component': ['Fuselage', 'Aft Fuselage', 'Wings', 'Vertical Tails', 'LH2 Tanks', 'Engines', 'Passengers and Crew', 'LV3 Containers', 'MLG', 'NLG'],
-        'Weight (kg)': [ float(masses_df.loc['Fuselage', 'mass']), float(masses_df.loc['Aft Body', 'mass']), 2*float(masses_df.loc['Wing', 'mass']), 2000, 7709, 3902, 12580, 6350, 2*float(masses_df.loc['Main Landing Gear', 'mass']), float(masses_df.loc['Nose Landing Gear', 'mass'])],
-        'Xi (m)': [float(masses_df.loc['Fuselage', 'x_cg']), float(masses_df.loc['Aft Body', 'x_cg']), float(masses_df.loc['Wing', 'x_cg']), 15.5, 10.995, 15, 8.37, 12.305, float(masses_df.loc['Main Landing Gear', 'x_cg']), float(masses_df.loc['Nose Landing Gear', 'x_cg'])], #x distance from RP
-        'Yi (m)': [float(masses_df.loc['Fuselage', 'z_cg']), float(masses_df.loc['Aft Body', 'z_cg']), float(masses_df.loc['Wing', 'z_cg']), 3.936, -1.118, 2, 0.4, -0.955, float(masses_df.loc['Main Landing Gear', 'z_cg']), float(masses_df.loc['Nose Landing Gear', 'z_cg'])], #y distance from RP
-        'Zi (m)': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], #z distance from RP
-        'Ixx Personal': [float(masses_df.loc['Fuselage', 'Ixx']), float(masses_df.loc['Aft Body', 'Ixx']), 2*float(masses_df.loc['Wing', 'Ixx']), 0, 6151, 36072, 0, 0, 2*float(masses_df.loc['Main Landing Gear', 'Ixx']), float(masses_df.loc['Nose Landing Gear', 'Ixx']),],
+        'Weight (kg)': [ float(masses_df.loc['Fuselage', 'mass']), float(masses_df.loc['Aft Body', 'mass']), 2*float(masses_df.loc['Wing', 'mass']), 2*float(masses_df.loc['Tail', 'mass']), 7709, 3902, 12580, 6350, 2*float(masses_df.loc['Main Landing Gear', 'mass']), float(masses_df.loc['Nose Landing Gear', 'mass'])],
+        'Xi (m)': [float(masses_df.loc['Fuselage', 'x_cg']), float(masses_df.loc['Aft Body', 'x_cg']), float(masses_df.loc['Wing', 'x_cg']), float(masses_df.loc['Wing', 'x_cg']), 10.995, 15, 8.37, 12.305, float(masses_df.loc['Main Landing Gear', 'x_cg']), float(masses_df.loc['Nose Landing Gear', 'x_cg'])], #x distance from RP
+        'Yi (m)': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], #z distance from RP
+        'Zi (m)': [float(masses_df.loc['Fuselage', 'z_cg']), float(masses_df.loc['Aft Body', 'z_cg']), float(masses_df.loc['Wing', 'z_cg']), float(masses_df.loc['Wing', 'y_cg']), -1.118, 2, 0.4, -0.955, float(masses_df.loc['Main Landing Gear', 'z_cg']), float(masses_df.loc['Nose Landing Gear', 'z_cg'])], #y distance from RP
+        'Ixx Personal': [float(masses_df.loc['Fuselage', 'Ixx']), float(masses_df.loc['Aft Body', 'Ixx']), 2*float(masses_df.loc['Wing', 'Ixx']), 2*float(masses_df.loc['Wing', 'Ixx']), 6151, 36072, 0, 0, 2*float(masses_df.loc['Main Landing Gear', 'Ixx']), float(masses_df.loc['Nose Landing Gear', 'Ixx']),],
         'Iyy Personal': [float(masses_df.loc['Fuselage', 'Iyy']), float(masses_df.loc['Aft Body', 'Iyy']), 2*float(masses_df.loc['Wing', 'Iyy']), 0, 14458, 19735, 0, 3377, 2*float(masses_df.loc['Main Landing Gear', 'Iyy']), float(masses_df.loc['Nose Landing Gear', 'Iyy']),], 
         'Izz Personal': [float(masses_df.loc['Fuselage', 'Izz']), float(masses_df.loc['Aft Body', 'Izz']), 2*float(masses_df.loc['Wing', 'Izz']), 0, 14458, 19735, 0, 2490, 2*float(masses_df.loc['Main Landing Gear', 'Izz']), float(masses_df.loc['Nose Landing Gear', 'Izz']), ]    
     }
+    print(wb_data)
     df = pd.DataFrame(wb_data)
 
     # Calculate moments
@@ -87,8 +89,9 @@ def WeightBalance(masses_file):
 #               STATIC STABILITY ANALYSIS                   #
 #                                                           #
 #############################################################
-def Stability(stab_file):
+def StaticStability(stab_file):
 
+ 
     # Path to your .stab file
     stab_file_path = 'Poster_Showcase_Model_2_DegenGeom.stab'
 
@@ -332,6 +335,37 @@ def Stability(stab_file):
 #               DYNAMIC STABILITY ANALYSIS                  #
 #                                                           #
 #############################################################
+def DynamicStabilityControl():
+    ####Defining from previous functions
+    #WeightBalance
+    total_weight = WeightBalance(total_weight); 
+    Ixx_total = WeightBalance(Ixx_total); 
+    Iyy_total = WeightBalance(Iyy_total); 
+    Izz_total = WeightBalance(Ixx_total); 
+    Izx_total = WeightBalance(Izx_total); 
+
+    #Static Stability
+    velocity = StaticStability(velocity); 
+    gravity = StaticStability(gravity); 
+    q_dash0 = StaticStability(q_dash0); 
+    wing_area = StaticStability(wing_area); 
+    mac = StaticStability(mac); 
+    wingspan = StaticStability(wingspan); 
+    rho = StaticStability(rho)
+
+    stab_data = StaticStability(stab_data); 
+    cd_0 = StaticStability(cd_0); 
+    cn_beta = StaticStability(cn_beta); 
+    c_i_beta = StaticStability(c_i_beta); 
+    cn_r = StaticStability(cn_r); 
+    c_i_p = StaticStability(c_i_p); 
+    cm_q_plus_alpha_dot = StaticStability(cm_q_plus_alpha_dot); 
+    cy_beta = StaticStability(cy_beta); 
+    Ct_xu = StaticStability(Ct_xu); 
+    cm_q = StaticStability(cm_q); 
+    cl_alpha = StaticStability(cl_alpha); 
+    cm_alpha = StaticStability(cm_alpha); 
+
     ########## Required Stability Derivatives##############
 
     cl_r = stab_data.loc[stab_data['Coef'] == 'CMl', 'r'].values[0]; 
@@ -339,18 +373,32 @@ def Stability(stab_file):
     cl_u = stab_data.loc[stab_data['Coef'] == 'CL', 'U'].values[0]; 
     cl_0 = (total_weight*gravity)/(q_dash0*wing_area)
 
+    #Control Surface Coeff. 
+    ae_Z_delta_e = stab_data.loc[stab_data['Coef'] == 'CL', 'ConGrp_1'].values[0]; #Outboard Elevon
+    ie_Z_delta_e = stab_data.loc[stab_data['Coef'] == 'CL', 'ConGrp_2'].values[0]; #Inboard Elevon
+
+    ae_M_delta_e = stab_data.loc[stab_data['Coef'] == 'CMm', 'ConGrp_1'].values[0]; #Outboard Elevon
+    ie_M_delta_e = stab_data.loc[stab_data['Coef'] == 'CMm', 'ConGrp_2'].values[0]; #Inboard Elevon
+
+    ae_L_delta_a = stab_data.loc[stab_data['Coef'] == 'CMl', 'ConGrp_1'].values[0]; #Outboard Elevon
+
+    C_n_delta_r = stab_data.loc[stab_data['Coef'] == 'CMn', 'ConGrp_3'].values[0]; #Rudder
 
     #Elevator, Aileron and Rudder Power Control Derivative Calculations 
-    Z_deltaE = (-q_dash0*wing_area*1.66)/total_weight
-    M_deltaE = (q_dash0*wing_area*mac*-8.8)/(Iyy_total)
-    L_delta_a = (q_dash0*wing_area*wingspan*0.133)/Ixx_total
+    Z_deltaE = (-q_dash0*wing_area*(ae_Z_delta_e + ie_Z_delta_e))/total_weight
+    M_deltaE = (q_dash0*wing_area*mac*(ae_M_delta_e + ie_M_delta_e))/(Iyy_total)
+    L_delta_a = (q_dash0*wing_area*wingspan*ae_L_delta_a)/Ixx_total
+    N_delta_r = (q_dash0*wing_area*wingspan*C_n_delta_r)/Izz_total
 
     #################DYNAMIC MODE CALCS######################################
 
     #Rolling Mode Approximation Calculations 
     l_p = (q_dash0*wing_area*wingspan*wingspan*c_i_p)/(2*Ixx_total*velocity)
     t_roll = -1/l_p; 
+
+    print("Roll Time Period (s)")
     print(t_roll)
+
     if t_roll < 1.4:
         print("Aircraft Meets Level 1 Flying Requirements for Rolling Mode")
     elif t_roll < 3:
@@ -360,58 +408,55 @@ def Stability(stab_file):
     else: 
         print("Aircraft is unacceptable for Rolling Mode, optimise configuration")
 
+    print("")
     ######Roll Mode Plotting########
 
     # Numerator and denominator coefficients of the transfer function
-    num_roll = [L_delta_a]
-    den_roll = [1, l_p, 0]
+    s_roll, t_plot_roll = sp.symbols('s t'); 
 
-    # Create transfer function system
-    system = TransferFunction(num_roll, den_roll)
+    roll_step = (-10*pi)/180 #5 Degree Input
 
-    # Time vector
-    roll_graph_t = np.linspace(0, 10, 1000)
+    phi_roll_s = ((roll_step*L_delta_a)/((s_roll * (s_roll - l_p))))
+    phi_roll_t = sp.inverse_laplace_transform(phi_roll_s, s_roll, t_plot_roll)
 
-    # Step response simulation
-    roll_out, response_roll = step(system, T=roll_graph_t)
+    #Plot Function
+    phi_func_roll = sp.lambdify(t_plot_roll, phi_roll_t, modules=['numpy'])
+    t_values_roll = np.linspace(0, 1, 500)
+    phi_values_roll = phi_func_roll(t_values_roll)
 
-    # Plot results
-    plt.show()
     plt.figure(figsize=(10, 6))
-    plt.plot(roll_out, response_roll, label='Roll angle response (ϕ)')
-    plt.xlabel('Time [s]')
-    plt.ylabel('Roll angle ϕ (response to step δA)')
-    plt.title('Step Response of φ(s)/δA(s)')
-    plt.grid(True)
+    plt.plot(t_values_roll, np.rad2deg(phi_values_roll), label='Roll Angle (deg)', color='r')  # Convert to degrees
+    plt.xlabel('Time (s)')
+    plt.ylabel('Roll Angle, phi(t) (deg)')
+    plt.title('Roll Response to 10° Aileron Step Input')
+    plt.grid()
     plt.legend()
-
+    plt.show()
 
 
     #Spiral Mode Approximation Calculations 
-    l_beta = (q_dash0*wing_area*wingspan*c_i_beta)/(Ixx_total*10)
-    n_r = (q_dash0*wing_area*wingspan*wingspan*cn_r)/(2*Izz_total*velocity*10)
-    l_r = (q_dash0*wing_area*wingspan*wingspan*cl_r)/(2*Ixx_total*velocity*10)
-    n_beta = (q_dash0*wing_area*wingspan*cn_beta)/(Izz_total*10)
-    a_1 = Izx_total / Ixx_total 
+    l_beta = (q_dash0*wing_area*wingspan*c_i_beta)/(Ixx_total)
+    n_r = (q_dash0*wing_area*wingspan*wingspan*cn_r)/(2*Izz_total*velocity)
+    l_r = (q_dash0*wing_area*wingspan*wingspan*cl_r)/(2*Ixx_total*velocity)
+    n_beta = (q_dash0*wing_area*wingspan*cn_beta)/(Izz_total)
 
-    print(l_beta)
-    print(n_r)
-    print(n_beta)
-    print(l_r)
+    spiral_time_constant = (l_beta*0.6931471806)/((n_beta*l_r)-(l_beta*n_r))
 
-    spiral_s = ((l_beta*n_r)-(n_beta*l_r))/(l_beta)
-    print(spiral_s)
-    t_spiral = -1/spiral_s
-    print(t_spiral)
+    print("Spiral to Double Amplitude Constant (s)")
+    print(spiral_time_constant)
 
-    if t_spiral > 20:
+    print("")
+
+    if spiral_time_constant > 20:
         print("Aircraft Meets Level 1 Flying Requirements for Spiral Mode")
-    elif t_spiral > 12:
+    elif spiral_time_constant > 12:
         print("Aircraft Meets Level 2 Flying Requirements for Spiral Mode")
-    elif t_spiral > 4:
+    elif spiral_time_constant > 4:
         print("Aircraft Meets Level 3 Flying Requirements for Spiral Mode")
     else: 
         print("Aircraft is unacceptable for Spiral Mode, optimise configuration")
+
+    print("")
 
     #Dutch-Roll Mode Approximation Calculations 
     y_beta = (q_dash0*wing_area*cy_beta)/total_weight
@@ -423,13 +468,18 @@ def Stability(stab_file):
     print("Dutch Roll Zeta")
     print(zeta_dt)
 
+    print("")
+
     print("Dutch Roll Natural Frequency")
     print(omega_ndt)
 
-    dt_real_part = -omega_ndt*zeta_dt
-    dt_imaginary_part = omega_ndt*math.sqrt(1-(zeta_dt**2))
-    print(f"The solutions are: {dt_real_part} + {dt_imaginary_part}i and {dt_real_part} - {dt_imaginary_part}i")
+    print("")
 
+    dt_real_part = -omega_ndt*zeta_dt
+    dt_imaginary_part = omega_ndt*math.sqrt(abs((zeta_dt**2)-1))
+    print(f"The Dutch Roll Transfer Function solutions are: {dt_real_part} + {dt_imaginary_part}i and {dt_real_part} - {dt_imaginary_part}i")
+
+    print("")
     if zeta_dt > 0.08 and (-dt_real_part) > 0.35 and omega_ndt > 0.4:
         print("Aircraft Meets Level 1 Flying Requirements for Dutch Roll Mode")
     elif zeta_dt > 0.02 and (-dt_real_part) > 0.05 and omega_ndt > 0.4:
@@ -439,7 +489,7 @@ def Stability(stab_file):
     else: 
         print("Aircraft is unacceptable for Dutch Roll, optimise configuration")
 
-
+    print("")
     #Phugoid Approximation Calculations
 
     z_u = (-q_dash0*wing_area*(cl_u+(2*cl_0)))/(total_weight*velocity)
@@ -448,11 +498,19 @@ def Stability(stab_file):
     omega_np = math.sqrt((-z_u*9.81)/velocity); 
     zeta_p = -x_u/(2*omega_np)
 
+    p_real_part = -omega_np*zeta_p
+    p_imaginary_part = omega_np*math.sqrt(abs((zeta_p**2)-1))
+
+    print("")
+
+    print(f"The Phugoid Transfer Function solutions are: {p_real_part} + {p_imaginary_part}i and {p_real_part} - {p_imaginary_part}i") 
+
+    print("")
+
+    print("Phugoid Damping Ratio")
     print(zeta_p)
 
-    p_real_part = -omega_np*zeta_p
-    p_imaginary_part = omega_np*math.sqrt(1-(zeta_p**2))
-    print(f"The solutions are: {p_real_part} + {p_imaginary_part}i and {p_real_part} - {p_imaginary_part}i") 
+    print("")
 
     if zeta_p > 0.04:
         print("Aircraft Meets Level 1 Flying Requirements for Phugoid")
@@ -461,37 +519,33 @@ def Stability(stab_file):
     else: 
         print("Aircraft has Level 3 or worse Flying Requirements for Phugoid") 
 
-
+    print("")
     ########Phugoid Plotting###########
     x_tu = ((q_dash0*wing_area)*(Ct_xu + (2*cd_0)))/(total_weight*velocity)
 
     # Numerator and denominator coefficients of the transfer function
-    num_phugoid = [Z_deltaE, (Z_deltaE*(-x_u-x_tu))]
-    den_phugoid = [
-        -velocity, 
-        -velocity * (-x_tu-x_u), 
-        -velocity * (z_u*gravity / velocity)
-    ]
+    s_phugoid, t_phugoid = sp.symbols('s t'); 
 
-    # Create transfer function object
-    system_phugoid = TransferFunction(num_phugoid, den_phugoid)
+    elevator_step_phugoid = (15*pi)/180 #5 Degree Input
 
-    # Time vector for simulation
-    t_phugoid = np.linspace(0, 180, 100)
-    phugoid_input = np.ones_like(t_phugoid) * 0.262
-    t_phugoid, alpha_response_phugoid, _ = lsim(system_phugoid, U = phugoid_input,  T=t_phugoid)
+    #Pitch Transfer Function
+    theta_phugoid_s = (elevator_step_phugoid * Z_deltaE * (s_phugoid - x_u - x_tu))/( (-velocity * ((s_phugoid**2) - ((x_u*x_tu)*s_phugoid) - ((z_u*gravity)/velocity)))) 
 
-    # Plotting the step response (response to an elevator step input)
-    # Plot results
+    theta_phugoid_t = sp.inverse_laplace_transform(theta_phugoid_s, s_phugoid, t_phugoid)
+
+    #Plot Function
+    theta_pugoid_func = sp.lambdify(t_phugoid, theta_phugoid_t, modules=['numpy'])
+    t_values_theta_phugoid = np.linspace(0, 360, 500)
+    theta_values_phugoid = theta_pugoid_func(t_values_theta_phugoid)
+
     plt.figure(figsize=(10, 6))
-    plt.plot(t_phugoid, alpha_response_phugoid, label=f'Roll angle response (ϕ) to 15° step')
-    plt.xlabel('Time [s]')
-    plt.ylabel('Roll angle ϕ (response to step δA)')
-    plt.title('Step Response of φ(s)/δA(s) with variable input')
-    plt.grid(True)
+    plt.plot(t_values_theta_phugoid, np.rad2deg(theta_values_phugoid), label='Pitch Attitude (deg)', color='r')  # Convert to degrees
+    plt.xlabel('Time (s)')
+    plt.ylabel('Pitch Attitude Angle, theta(t) (deg)')
+    plt.title('Phugoid Response to 30° Elevon Step Input')
+    plt.grid()
     plt.legend()
     plt.show()
-
 
 
     #Short Period Approximation Calculations 
@@ -505,14 +559,22 @@ def Stability(stab_file):
     omega_nsp = math.sqrt(((Z_alpha*m_q)/velocity)-m_alpha); 
     zeta_sp = (-(m_q+(Z_alpha/velocity)+m_alpha_dot))/(2*omega_nsp)
 
-    print(zeta_sp)
 
     sp_real_part = -omega_nsp*zeta_sp
-    print(sp_real_part)
+    sp_imaginary_part = omega_nsp*(math.sqrt(abs((zeta_p**2)-1)))
 
-    sp_imaginary_part = omega_nsp*(math.sqrt(1-(zeta_sp**2)))
     print(f"The solutions are: {sp_real_part} + {sp_imaginary_part}i and {sp_real_part} - {sp_imaginary_part}i")
 
+    print("")
+    print("Short Period Damping Ratio")
+    print(zeta_sp)
+
+    print("")
+    print("Short Period Natural Freq.")
+    print(omega_nsp)
+
+
+    print("")
     if zeta_sp > 0.3 and zeta_sp < 2.0:
         print("Aircraft Meets Level 1 Flying Requirements for Short Period")
     elif zeta_sp > 0.2 and zeta_sp < 2.0:
@@ -522,32 +584,62 @@ def Stability(stab_file):
     else: 
         print("Aircraft is unacceptable for Short Period, optimise configuration")
 
+    print("")
+
     ######Short Period Plotting########
-
     # Numerator and denominator coefficients of the transfer function
-    num_sp = [Z_deltaE, (M_deltaE * velocity - m_q * Z_deltaE)]
-    den_sp = [
-        velocity, 
-        -velocity * (m_q + Z_alpha / velocity + m_alpha_dot), 
-        velocity * (Z_alpha * m_q / velocity - m_alpha)
-    ]
+    s_sp, t_sp = sp.symbols('s t'); 
 
-    # Create transfer function object
-    system_sp = TransferFunction(num_sp, den_sp)
+    elevator_step_sp = (10*pi)/180 #5 Degree Input
 
-    # Time vector for simulation
-    t_sp = np.linspace(0, 20, 500)
-    t_sp, alpha_response_sp = step(system_sp, T=t_sp)
+    #Pitch Transfer Function
+    alpha_sp_s = (elevator_step_sp * ((Z_deltaE * s_sp) + ((M_deltaE*velocity) - (m_q*Z_deltaE))))/(velocity * ((s_sp**2) - (s_sp * (m_q + (Z_alpha/velocity) + m_alpha_dot)) + (((Z_alpha*m_q)/velocity) - m_alpha)))
 
-    # Plotting the step response (response to an elevator step input)
-    plt.figure(figsize=(8, 5))
+    alpha_sp_t = sp.inverse_laplace_transform(alpha_sp_s, s_sp, t_sp)
+
+    #Plot Function
+    alpha_sp_func = sp.lambdify(t_sp, alpha_sp_t, modules=['numpy'])
+    t_values_alpha_sp = np.linspace(0, 8, 500)
+    alpha_values_sp = alpha_sp_func(t_values_alpha_sp)
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(t_values_alpha_sp, np.rad2deg(alpha_values_sp), label='AoA (deg)', color='r')  # Convert to degrees
+    plt.xlabel('Time (s)')
+    plt.ylabel('AoA, alpha(t) (deg)')
+    plt.title('Short Period Response to 30° Elevon Step Input')
+    plt.grid()
+    plt.legend()
     plt.show()
-    plt.plot(t_sp, alpha_response_sp)
-    plt.title(r'Short Period Mode: $\alpha(s)/\delta_E(s)$ Step Response')
-    plt.xlabel('Time [s]')
-    plt.ylabel('Angle of Attack Response [rad]')
-    plt.grid(True)
 
+    theta_sp_s = (elevator_step_sp * ((s_sp * ((velocity * M_deltaE) + (Z_deltaE * m_alpha_dot))))  + ((m_alpha * Z_deltaE) - (Z_alpha * M_deltaE))) / (s_sp * velocity * ((s_sp**2) - (s_sp * (m_q + (Z_alpha/velocity) + m_alpha_dot)) + (((Z_alpha*m_q)/velocity) - m_alpha)))
+    theta_sp_t = sp.inverse_laplace_transform(theta_sp_s, s_sp, t_sp)
+
+    theta_sp_func = sp.lambdify(t_sp, theta_sp_t, modules=['numpy'])
+    t_values_theta_sp = np.linspace(0, 8, 500)
+    theta_values_sp = theta_sp_func(t_values_theta_sp)
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(t_values_theta_sp, np.rad2deg(theta_values_sp), label='Theta (deg)', color='r')  # Convert to degrees
+    plt.xlabel('Time (s)')
+    plt.ylabel('Pitch Attitude, theta(t) (deg)')
+    plt.title('Short Period Response to 30° Elevon Step Input')
+    plt.grid()
+    plt.legend()
+    plt.show()
+
+
+
+    ###############Controlability Calculations#############
+    #Directional Control in event of Engine Out Yawing Moment
+    total_thrust = 51857.087041393
+
+    max_rudder_deflection = (15*pi)/180 #Assumed to be maximum Rudder deflection
+    v_mc = math.sqrt(((total_thrust/2)*3.5)/(0.5*rho*wing_area*wingspan*C_n_delta_r))
+
+    print("Minimum Control Speed at Altitude"); 
+    print(v_mc)
+
+    print("")
 
     exit_code = input("Press Enter to Exit")
 
