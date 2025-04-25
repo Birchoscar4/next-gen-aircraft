@@ -148,6 +148,8 @@ while tip_deflection_error > 0.05:
     
     counter += 1
 
+wing_mass_array = compute_wing_mass(spar_cap_radius=wing_sparcap_radius, num_stringers=wing_num_stringers, skin_thickness=wing_skin_thickness, spar_thickness=wing_spar_thickness,max_q_velocity=max_q_velocity, max_q_density=max_q_density,load_factors=load_factor, LE_spar=LE_spar_wing, TE_spar=TE_spar_wing, file_path = "wing_pressure.slc")[8]
+
 # Landing gear sizing – uses MTOW estimate for initial sizing 
 landing_gear_mass_array = landing_gear_sizing(ground_clearance, MTOW, nlg_distance_from_cg, mlg_distance_from_cg, sink_speed, z_cg)
 
