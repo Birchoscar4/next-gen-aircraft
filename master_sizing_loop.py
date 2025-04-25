@@ -111,9 +111,11 @@ load_factor[0], load_factor[1] = compute_gust_loads()
 cabin_mass_array = compute_cabin_mass(frame_spacing, sparcap_radius=fuselage_sparcap_radius)
 # aft_body_mass_array = compute_aft_body_mass()
 
-# Wing bending analysis – FSI HERE 
-wing_mass_array = compute_wing_mass(spar_cap_radius=wing_sparcap_radius, num_stringers=wing_num_stringers, skin_thickness=wing_skin_thickness, spar_thickness=wing_spar_thickness,max_q_velocity=max_q_velocity, max_q_density=max_q_density,load_factors=load_factor, LE_spar=LE_spar_wing, TE_spar=TE_spar_wing)
+# Vertical Stabiliser bending analysis
 vstab_mass_array = compute_vstab_mass(spar_cap_radius=vstab_sparcap_radius, num_stringers=vstab_num_stringers, skin_thickness=vstab_skin_thickness, spar_thickness=vstab_spar_thickness,max_q_velocity=max_q_velocity, max_q_density=max_q_density,load_factors=load_factor, LE_spar=LE_spar_vstab, TE_spar=TE_spar_vstab)
+
+### FSI LOOP HERE
+wing_mass_array = compute_wing_mass(spar_cap_radius=wing_sparcap_radius, num_stringers=wing_num_stringers, skin_thickness=wing_skin_thickness, spar_thickness=wing_spar_thickness,max_q_velocity=max_q_velocity, max_q_density=max_q_density,load_factors=load_factor, LE_spar=LE_spar_wing, TE_spar=TE_spar_wing)
 
 # Landing gear sizing – uses MTOW estimate for initial sizing 
 landing_gear_mass_array = landing_gear_sizing(ground_clearance, MTOW, nlg_distance_from_cg, mlg_distance_from_cg, sink_speed, z_cg)
