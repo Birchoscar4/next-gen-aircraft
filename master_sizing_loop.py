@@ -120,7 +120,7 @@ vstab_mass_array = compute_vstab_mass(spar_cap_radius=vstab_sparcap_radius, num_
 ### FSI LOOPS HERE
 tip_def_array = []
 counter = 0
-
+# Positive load factor fsi loop
 tip_deflection_error = 1
 while tip_deflection_error > 0.05:
     # Call wing deflection function to produce deflection and twist distribution
@@ -135,7 +135,7 @@ while tip_deflection_error > 0.05:
 
 tip_def_array = []
 counter = 0
-
+# Negative load factor fsi loop
 tip_deflection_error = 1
 while tip_deflection_error > 0.05:
     # Call wing deflection function to produce deflection and twist distribution
