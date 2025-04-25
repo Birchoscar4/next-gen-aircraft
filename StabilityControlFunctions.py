@@ -632,9 +632,9 @@ def DynamicStabilityControl():
     half_thrust = 124105.38 #Half of the thrust taken form N+3 Engine Code
 
     max_rudder_deflection = (15*pi)/180 #Assumed to be maximum Rudder deflection
-    v_mc = math.sqrt(((half_thrust/2)*3.5)/(0.5*rho*wing_area*wingspan*C_n_delta_r))
+    v_mc = math.sqrt(((half_thrust)*3.5)/(0.5*rho*wing_area*wingspan*C_n_delta_r))
 
-    print("Minimum Control Speed at Altitude"); 
+    print("Minimum Control Speed at Altitude for an Engine out Yawing Moment"); 
     print(v_mc)
 
     print("")
