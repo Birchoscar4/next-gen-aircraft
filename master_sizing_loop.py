@@ -16,7 +16,8 @@ import openmdao.api as om
 
 
 #####################GEOMETRY AND CONFIGURATION CODE #####################
-
+from Initial_Geom import build_initial_geometry
+build_initial_geometry()
 
 
 
