@@ -101,10 +101,10 @@ def WeightBalance():
 def StaticStability():
 
  
-    # Path to your .stab file
+    # Path to .stab file
     stab_file_path = 'T_area_12_angle_60.stab'
 
-    # Empty dictionary to store the values
+    # Empty dictionary to store mission profile values
     flight_data = {}
 
     # Read file
@@ -120,7 +120,7 @@ def StaticStability():
                     # Store into dictionary
                     flight_data[name] = {'Value': value, 'Unit': unit}
                     
-                    # Check if we reached Yaw___Rate
+                    # Check if we reached Yaw___Rate (end of mission profile data)
                     if name == "Yaw___Rate":
                         break  #Stop reading further!
 
@@ -131,7 +131,7 @@ def StaticStability():
     velocity = flight_data_df.loc['Vinf_', 'Value'];  
     rho = flight_data_df.loc['Rho_', 'Value']; 
     q_dash0 = 0.5*rho*(velocity**2); 
-    cd_0 = 0.021; 
+    cd_0 = 0.021; #Needs to be changed to link with parasitic drag calculation
     wing_area = flight_data_df.loc['Sref_', 'Value']; 
     thrust_mach_number = -12590; 
     mac = flight_data_df.loc['Cref_', 'Value']; 
@@ -629,10 +629,10 @@ def DynamicStabilityControl():
 
     ###############Controlability Calculations#############
     #Directional Control in event of Engine Out Yawing Moment
-    total_thrust = 51857.087041393
+    half_thrust = 124105.38 #Half of the thrust taken form N+3 Engine Code
 
     max_rudder_deflection = (15*pi)/180 #Assumed to be maximum Rudder deflection
-    v_mc = math.sqrt(((total_thrust/2)*3.5)/(0.5*rho*wing_area*wingspan*C_n_delta_r))
+    v_mc = math.sqrt(((half_thrust/2)*3.5)/(0.5*rho*wing_area*wingspan*C_n_delta_r))
 
     print("Minimum Control Speed at Altitude"); 
     print(v_mc)
