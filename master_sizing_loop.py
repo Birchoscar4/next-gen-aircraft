@@ -56,6 +56,32 @@ from wingbuckling import compute_wing_mass
 from landing_gear_sizing import landing_gear_sizing
 from mass_properties import write_aircraft_data_to_csv
 
+max_q_density = 0.35 #temp
+max_q_velocity = 210 #temp
+#Fuselage Inputs
+frame_spacing = 0.2 #m
+fuselage_sparcap_radius = 0.05 #m
+#Wing Inputs
+wing_sparcap_radius = 0.08
+wing_num_stringers = 10
+wing_skin_thickness = 0.002
+wing_spar_thickness = 0.005
+LE_spar_wing = 0.1
+TE_spar_wing = 0.7
+#Vstab Inputs
+vstab_sparcap_radius = 0.02
+vstab_num_stringers = 10
+vstab_skin_thickness = 0.002
+vstab_spar_thickness = 0.005
+LE_spar_vstab = 0.1
+TE_spar_vstab = 0.7
+#Landing Gear Inputs
+ground_clearance = 2
+nlg_distance_from_cg = 8
+mlg_distance_from_cg = 1.5
+sink_speed = 3.8
+z_cg = 4 # from ground
+
 # Gust load factor parameters
 C_L_a = 5.01
 MTOW = 60000
