@@ -52,9 +52,9 @@ takeoff_landing = takeoff_and_landing()
 ##########################STRUCTURES CODE #############################
 import csv
 from cabin_mass import compute_cabin_mass
-from wingbuckling import compute_wing_mass
+from wing_model import compute_wing_mass
+from vstab_model import compute_vstab_mass
 from landing_gear_sizing import landing_gear_sizing
-from mass_properties import write_aircraft_data_to_csv
 
 max_q_density = 0.35 #temp
 max_q_velocity = 210 #temp
