@@ -55,6 +55,7 @@ from cabin_mass import compute_cabin_mass
 from wing_model import compute_wing_mass
 from vstab_model import compute_vstab_mass
 from landing_gear_sizing import landing_gear_sizing
+from mass_properties import write_aircraft_data_to_csv
 
 max_q_density = 0.35 #temp
 max_q_velocity = 210 #temp
@@ -118,7 +119,7 @@ vstab_mass_array = compute_vstab_mass(spar_cap_radius=vstab_sparcap_radius, num_
 landing_gear_mass_array = landing_gear_sizing(ground_clearance, MTOW, nlg_distance_from_cg, mlg_distance_from_cg, sink_speed, z_cg)
 
 # Write mass properties csv 
-write_aircraft_data_to_csv('aircraft_masses.csv',cabin_mass_array, wing_mass_array, landing_gear_mass_array)
+write_aircraft_data_to_csv('aircraft_masses.csv',cabin_mass_array, wing_mass_array, vstab_mass_array, landing_gear_mass_array)
 
 
 
