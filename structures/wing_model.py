@@ -1,4 +1,4 @@
-def compute_wing_mass(spar_cap_radius, num_stringers, skin_thickness, spar_thickness, max_q_velocity, max_q_density, load_factors, LE_spar, TE_spar):
+def compute_wing_mass(spar_cap_radius, num_stringers, skin_thickness, spar_thickness, max_q_velocity, max_q_density, load_factors, LE_spar, TE_spar, file_path):
     import numpy as np
     import re
     import pandas as pd
@@ -6,7 +6,7 @@ def compute_wing_mass(spar_cap_radius, num_stringers, skin_thickness, spar_thick
     buckled = 0
     load_factor = load_factors
 
-    file_path = "pressure.slc"
+    #file_path = "pressure.slc"
     aerofoil_file = "sc20714.dat"
     rho = max_q_density #0.36518 # kg/m3 - air
     v = max_q_velocity #210 # m/s
@@ -676,9 +676,9 @@ def compute_wing_mass(spar_cap_radius, num_stringers, skin_thickness, spar_thick
 
         print("Wing Mass:", mass,"kg")
         tip_deflection[load_case] = Ve[elements-1]
-        print("Wing Tip deflection (m):", tip_deflection)
+        print("Wing Tip deflection (m):", tip_deflection[load_case])
         tip_twist[load_case] = alpha_e[elements-1]
 
-    return [x_cg,y_cg,z_cg,I_x,I_y,I_z,mass,np.max(buckled), np.max(abs(tip_deflection)), np.max(abs(tip_twist)), TE_spar]
+    return [x_cg,y_cg,z_cg,I_x,I_y,I_z,mass,np.max(buckled), tip_deflection[0], tip_deflection[1], np.max(abs(tip_twist)), TE_spar]
 
 #compute_wing_mass(0.08, 8, 0.01, 0.02, 210, 0.38, [3.5,-1], 0.1, 0.7)
