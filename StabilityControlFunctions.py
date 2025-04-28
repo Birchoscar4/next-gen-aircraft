@@ -222,7 +222,7 @@ def StaticStability():
         return None  # if not found
 
     #Load .qstab file
-    qstab_file = 'Poster_Showcase_Model 1_DegenGeom_Q.qstab'  # Replace with your actual file path
+    qstab_file = 'Poster_Showcase_Model 1_DegenGeom_Q.qstab'  # Replace with actual file path
     cm_q_plus_alpha_dot = extract_cm_q_alpha_dot(qstab_file)
 
     # Load .stab file
@@ -244,7 +244,7 @@ def StaticStability():
     if (Ct_xu - cd_u) < 0: 
         print ("Aircraft Derivative is Stable")
     else: 
-        print ("Aircraft Derivative is not Stable, optimise configuration")
+        print ("Aircraft Derivative is not Stable, redo configuration")
 
     print("")
 
@@ -255,7 +255,7 @@ def StaticStability():
     if cy_beta < 0: 
         print ("Aircraft Derivative is Stable")
     else: 
-        print ("Aircraft Derivative is not Stable, optimise configuration")
+        print ("Aircraft Derivative is not Stable, redo configuration")
 
     print("")
 
@@ -266,7 +266,7 @@ def StaticStability():
     if cl_alpha > 0: 
         print ("Aircraft Derivative is Stable")
     else: 
-        print ("Aircraft Derivative is not Stable, optimise configuration")
+        print ("Aircraft Derivative is not Stable, redo configuration")
 
     print("")
 
@@ -277,7 +277,7 @@ def StaticStability():
     if c_i_beta < 0: 
         print ("Aircraft Derivative is Stable")
     else: 
-        print ("Aircraft Derivative is not Stable, optimise configuration")
+        print ("Aircraft Derivative is not Stable, redo configuration")
 
     print("")
 
@@ -288,7 +288,7 @@ def StaticStability():
     if c_i_p < 0: 
         print ("Aircraft Derivative is Stable")
     else: 
-        print ("Aircraft Derivative is not Stable, optimise configuration")
+        print ("Aircraft Derivative is not Stable, redo configuration")
 
     print("")
 
@@ -299,7 +299,7 @@ def StaticStability():
     if cm_alpha < 0: 
         print ("Aircraft Derivative is Stable")
     else: 
-        print ("Aircraft Derivative is not Stable, optimise configuration")
+        print ("Aircraft Derivative is not Stable, redo configuration")
 
     print("")
 
@@ -310,7 +310,7 @@ def StaticStability():
     if cm_q < 0: 
         print ("Aircraft Derivative is Stable")
     else: 
-        print ("Aircraft Derivative is not Stable, optimise configuration")
+        print ("Aircraft Derivative is not Stable, redo configuration")
 
     print("")
 
@@ -321,7 +321,7 @@ def StaticStability():
     if cn_beta > 0:
         print ("Aircraft Derivative is Stable ")
     else: 
-        print ("Aircraft Derivative is not Stable, optimise configuration")
+        print ("Aircraft Derivative is not Stable, redo configuration")
 
     print("")
 
@@ -332,7 +332,7 @@ def StaticStability():
     if cn_r < 0: 
         print ("Aircraft Derivative is Stable")
     else: 
-        print ("Aircraft Derivative is not Stable, optimise configuration")
+        print ("Aircraft Derivative is not Stable, redo configuration")
 
     print("")
 
@@ -343,7 +343,7 @@ def StaticStability():
     if static_margin > 0: 
         print ("Aircraft Derivative is Stable")
     else: 
-        print ("Aircraft Derivative is not Stable, optimise configuration")
+        print ("Aircraft Derivative is not Stable, redo configuration")
 
     print("")
 
@@ -412,9 +412,9 @@ def DynamicStabilityControl():
     # Numerator and denominator coefficients of the transfer function
     s_roll, t_plot_roll = sp.symbols('s t'); 
 
-    roll_step = (-10*pi)/180 #5 Degree Input
+    roll_step = (-10*pi)/180 #10 Degree Step Input
 
-    phi_roll_s = ((roll_step*L_delta_a)/((s_roll * (s_roll - l_p))))
+    phi_roll_s = ((roll_step*L_delta_a)/(s_roll * (s_roll * (s_roll - l_p))))
     phi_roll_t = sp.inverse_laplace_transform(phi_roll_s, s_roll, t_plot_roll)
 
     #Plot Function
@@ -463,7 +463,7 @@ def DynamicStabilityControl():
     omega_ndt = math.sqrt((1/velocity)*((y_beta*n_r)+(n_beta*velocity)-(n_beta*y_r)))
     zeta_dt = (-1/(2*omega_ndt))*(n_r+(y_beta/velocity))
 
-    print("Dutch Roll Zeta")
+    print("Dutch Roll Damping Ratio")
     print(zeta_dt)
 
     print("")
@@ -507,9 +507,13 @@ def DynamicStabilityControl():
 
     print("Phugoid Damping Ratio")
     print(zeta_p)
-
     print("")
 
+    print("Phugoid Natural Frequency (rad/s)")
+    print(omega_np)
+    print("")
+
+    
     if zeta_p > 0.04:
         print("Aircraft Meets Level 1 Flying Requirements for Phugoid")
     elif zeta_p > 0:
@@ -524,7 +528,7 @@ def DynamicStabilityControl():
     # Numerator and denominator coefficients of the transfer function
     s_phugoid, t_phugoid = sp.symbols('s t'); 
 
-    elevator_step_phugoid = (15*pi)/180 #5 Degree Input
+    elevator_step_phugoid = (15*pi)/180 #15 Degree Input
 
     #Pitch Transfer Function
     theta_phugoid_s = (elevator_step_phugoid * Z_deltaE * (s_phugoid - x_u - x_tu))/( (-velocity * ((s_phugoid**2) - ((x_u*x_tu)*s_phugoid) - ((z_u*gravity)/velocity)))) 
@@ -540,7 +544,7 @@ def DynamicStabilityControl():
     plt.plot(t_values_theta_phugoid, np.rad2deg(theta_values_phugoid), label='Pitch Attitude (deg)', color='r')  # Convert to degrees
     plt.xlabel('Time (s)')
     plt.ylabel('Pitch Attitude Angle, theta(t) (deg)')
-    plt.title('Phugoid Response to 30° Elevon Step Input')
+    plt.title('Phugoid Response to 15° Elevon Step Input')
     plt.grid()
     plt.legend()
     plt.show()
@@ -568,7 +572,7 @@ def DynamicStabilityControl():
     print(zeta_sp)
 
     print("")
-    print("Short Period Natural Freq.")
+    print("Short Period Natural Frequency")
     print(omega_nsp)
 
 
@@ -588,7 +592,7 @@ def DynamicStabilityControl():
     # Numerator and denominator coefficients of the transfer function
     s_sp, t_sp = sp.symbols('s t'); 
 
-    elevator_step_sp = (10*pi)/180 #5 Degree Input
+    elevator_step_sp = (30*pi)/180 #30 Degree Input
 
     #Pitch Transfer Function
     alpha_sp_s = (elevator_step_sp * ((Z_deltaE * s_sp) + ((M_deltaE*velocity) - (m_q*Z_deltaE))))/(velocity * ((s_sp**2) - (s_sp * (m_q + (Z_alpha/velocity) + m_alpha_dot)) + (((Z_alpha*m_q)/velocity) - m_alpha)))
