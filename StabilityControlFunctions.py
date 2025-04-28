@@ -18,6 +18,8 @@ plt.ion()
 def WeightBalance():
 
     W_LH2, W_tank, r, L = LH2_tank_sizing_code()
+    
+    
     tank_location_x = input("Input X coordinate of LH2 tank location")
     tank_location_y = input("Input Y coordinate of LH2 tank location")
     tank_location_z = input("Input Z coordinate of LH2 tank location")
