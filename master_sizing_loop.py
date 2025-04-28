@@ -95,7 +95,7 @@ wing_area = 275
 cruise_velocity = 210
 gust_velocity = 13.4
 
-def compute_gust_loads():
+def compute_gust_loads(MTOW):
     mu_g = 2*(MTOW/wing_area)/(rho*mean_chord*C_L_a)
     K_g = 0.88*mu_g/(5.3+mu_g)
     n_lim_pos = 1+(K_g*0.5*rho*cruise_velocity*gust_velocity*C_L_a)/(9.81*MTOW/wing_area)
@@ -108,7 +108,7 @@ def compute_gust_loads():
     return n_lim_pos,n_lim_neg
 
 load_factor = [0,0]
-load_factor[0], load_factor[1] = compute_gust_loads()
+load_factor[0], load_factor[1] = compute_gust_loads(MTOW)
 
 # Fuselage curve fit equations, returns mass properties 
 cabin_mass_array = compute_cabin_mass(frame_spacing, sparcap_radius=fuselage_sparcap_radius)
