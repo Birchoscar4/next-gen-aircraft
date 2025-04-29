@@ -361,7 +361,7 @@ def build_initial_geometry():
 
 
         # Add vertical tail
-        tail_position = {"X_Rel_Location": 14.00, "Y_Rel_Location": -8.60656, "X_Rel_Rotation": 90}
+        tail_position = {"X_Rel_Location": 9.656, "Y_Rel_Location": -6.230, "X_Rel_Rotation": 90}
         tail_params = {"Span": 6.0, "Sweep": 30.0, "Sweep_Location": 0.0, "Root_Chord": 6.0, "Tip_Chord": 1.5, "ThickChord": 0.1}
         tail_id = add_vertical_tail("VerticalTail", tail_position, tail_params)
        
