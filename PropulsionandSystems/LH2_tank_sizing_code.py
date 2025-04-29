@@ -477,3 +477,5 @@ if __name__ == "__main__":
     W_LH2 = (4 / 3 * np.pi * r**3 + np.pi * r**2 * L) * 70 * 0.95
     W_tank = p.get_val("weight", units="kg").item()
     print(f"\n-------- Approximate gravimetric efficiency: {W_LH2 / (W_LH2 + W_tank) * 100:.1f}% --------")
+
+    return r, L, W_LH2, W_tank
