@@ -349,7 +349,7 @@ def StaticStability():
 
     print("")
 
-    return velocity, gravity, q_dash0, wing_area, wingspan, mac, rho, stab_data, cd_0, cn_beta, c_i_beta, cn_r, c_i_p, cm_q_plus_alpha_dot, cy_beta, Ct_xu, cm_q, cl_alpha, cm_alpha
+    return velocity, gravity, q_dash0, wing_area, wingspan, mac, rho, stab_data, cd_0, cn_beta, c_i_beta, cn_r, c_i_p, cm_q_plus_alpha_dot, cy_beta, Ct_xu, cm_q, cl_alpha, cm_alpha, static_margin
  
 #############################################################
 #                                                           #
@@ -364,7 +364,7 @@ def DynamicStabilityControl():
     # Obtaining Values from Static Stability function
     (velocity, gravity, q_dash0, wing_area, wingspan, mac, rho, 
      stab_data, cd_0, cn_beta, c_i_beta, cn_r, c_i_p, 
-     cm_q_plus_alpha_dot, cy_beta, Ct_xu, cm_q, cl_alpha, cm_alpha) = StaticStability()
+     cm_q_plus_alpha_dot, cy_beta, Ct_xu, cm_q, cl_alpha, cm_alpha, static_margin) = StaticStability()
 
     ########## Required Stability Derivatives##############
 
@@ -643,6 +643,17 @@ def DynamicStabilityControl():
     print("Minimum Control Speed at Altitude for an Engine out Yawing Moment"); 
     print(v_mc)
 
+    print("")
+
+    #Take-off Pitching Moment Calculations
+    #Take-off pitching moment control power derivative 
+    M_deltaE_to = ((0.5*1.225*75*75)*wing_area*mac*(ae_M_delta_e + ie_M_delta_e))
+    to_elevon_angle = (-30*pi)/180 #Conversion to rad
+    safety_margin_to = (M_deltaE_to*to_elevon_angle)/(total_weight*9.81*static_margin*mac*math.sin(0.0140)) #Take off angle of 8 degrees
+
+
+    print("Aircraft Pitching Moment Take-off safety margin")
+    print(safety_margin_to)
     print("")
 
     exit_code = input("Press Enter to Exit")
